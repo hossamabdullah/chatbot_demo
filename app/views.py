@@ -4,7 +4,7 @@ from flask_restful import Api, Resource, reqparse
 from flask import request, jsonify
 import requests
 import os
-
+from intents.Greeting_Intent import Greeting_Intent
 
 api = Api(app)
 
@@ -23,13 +23,13 @@ class RecommendationAPI(Resource):
         user_id = request.args.get("user_id")
         message = request.args.get("message")
         
-        data = {'user_id': user_id}
-        res = requests.post('https://goachievenow.com/admin/api/User/searchuserdetail', data)
-        dictFromServer = res.json()
-
-        tasks = dictFromServer['response']['tasks']
+        print("user id ", user_id)
+        print("message ", message)
+        greeting_intent = Greeting_Intent.check(user_id, message)
+        if(greeting_intent == None):
+            return "Please say Hi", 200
         
-        return tasks, 200
+        return greeting_intent.reply(), 200
 
 # api.add_resource(PetImageAPI, '/pet/<string:id>/uploadImage', endpoint = 'PetImageAPI')
 api.add_resource(RecommendationAPI, '/recommendation', endpoint = 'RecommendationAPI')
