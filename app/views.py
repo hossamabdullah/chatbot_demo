@@ -20,9 +20,10 @@ class RecommendationAPI(Resource):
         self.parser.add_argument('status', location='json', required=True, help="status is required")
 
     def get(self):
-        args = request.args.get("message")
+        user_id = request.args.get("user_id")
+        message = request.args.get("message")
         
-        data = {'user_id': args}
+        data = {'user_id': user_id}
         res = requests.post('https://goachievenow.com/admin/api/User/searchuserdetail', data)
         dictFromServer = res.json()
 
